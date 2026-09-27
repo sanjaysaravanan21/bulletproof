@@ -5,8 +5,12 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
+const repositoryName = process.env.GITHUB_REPOSITORY?.split('/')[1];
+const base = process.env.VITE_BASE_PATH
+  ?? (process.env.GITHUB_ACTIONS && repositoryName ? `/${repositoryName}/` : './');
+
 export default defineConfig({
-  base: './',
+  base,
   plugins: [react(), viteTsconfigPaths()],
   server: {
     port: 3000,

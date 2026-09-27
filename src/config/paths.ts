@@ -42,5 +42,9 @@ export const paths = {
       path: 'profile',
       getHref: () => '/app/profile',
     },
+    todos: {
+      path: 'todos',
+      getHref: () => '/app/todos',
+    },
   },
 } as const;
