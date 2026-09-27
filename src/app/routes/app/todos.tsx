@@ -41,49 +41,48 @@ const TodosRoute = () => {
   return (
     <ContentLayout title="Todos">
       <form onSubmit={addTodo} className="mb-4 flex gap-2">
-        <Input
-          input
+        <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Add a new todo"
-          className="flex h-9 flex-1 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring
+          className="flex h-9 flex-1 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        />
         <Button type="submit">Add</Button>
-    </form>
-
+      </form>
       {
-    todos.length === 0 ? (
-      <p className="text-sm text-gray-500">No todos yet. Add one above.</p>
-    ) : (
-    <ul className="flex flex-col gap-2">
-      {todos.map((todo) => (
-        <li
-          key={todo.id}
-          className="flex items-center justify-between rounded-md border bg-white px-4 py-2 shadow-sm"
-        >
-          <label className="flex flex-1 items-center gap-2">
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-              className="size-4"
-            />
-            <span className={cn(todo.completed && 'text-gray-400 line-through')}>
-              {todo.title}
-            </span>
-          </label>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => removeTodo(todo.id)}
-            aria-label="Delete todo"
-          >
-            <Trash2 className="size-4" />
-          </Button>
-        </li>
-      ))}
-    </ul>
-  )
-  }
+        todos.length === 0 ? (
+          <p className="text-sm text-gray-500">No todos yet. Add one above.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                className="flex items-center justify-between rounded-md border bg-white px-4 py-2 shadow-sm"
+              >
+                <label className="flex flex-1 items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => toggleTodo(todo.id)}
+                    className="size-4"
+                  />
+                  <span className={cn(todo.completed && 'text-gray-400 line-through')}>
+                    {todo.title}
+                  </span>
+                </label>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeTodo(todo.id)}
+                  aria-label="Delete todo"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )
+      }
     </ContentLayout >
   );
 };

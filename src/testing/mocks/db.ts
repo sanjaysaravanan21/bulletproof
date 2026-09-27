@@ -85,6 +85,8 @@ export const persistDb = async (model: Model) => {
 };
 
 export const initializeDb = async () => {
+  if (process.env.NODE_ENV === 'test') return;
+
   const database = await loadDb();
   Object.entries(db).forEach(([key, model]) => {
     const dataEntres = database[key];
@@ -97,5 +99,7 @@ export const initializeDb = async () => {
 };
 
 export const resetDb = () => {
+  if (process.env.NODE_ENV === 'test') return;
+
   window.localStorage.clear();
 };

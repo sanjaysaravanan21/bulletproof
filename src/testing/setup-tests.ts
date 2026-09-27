@@ -7,7 +7,7 @@ vi.mock('zustand');
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterAll(() => server.close());
-beforeEach(() => {
+beforeEach(async () => {
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
@@ -19,7 +19,7 @@ beforeEach(() => {
   window.btoa = (str: string) => Buffer.from(str, 'binary').toString('base64');
   window.atob = (str: string) => Buffer.from(str, 'base64').toString('binary');
 
-  initializeDb();
+  await initializeDb();
 });
 afterEach(() => {
   server.resetHandlers();
