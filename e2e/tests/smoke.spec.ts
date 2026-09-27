@@ -9,6 +9,11 @@ test('smoke', async ({ page }) => {
   const comment = createComment();
 
   await page.goto('/');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Welcome to the Application!!!' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Ok' }).click();
   await page.getByRole('button', { name: 'Get started' }).click();
   await page.waitForURL('/app');
 
