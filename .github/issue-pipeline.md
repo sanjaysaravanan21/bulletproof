@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use the `Issue Pipeline` custom agent to take one Jira or GitHub issue through planning, implementation, automated verification, and a non-production preview deployment. Specialist agent definitions live in `.github/agents/`.
+Use the `Issue Pipeline` custom agent to take one Jira or GitHub issue through six actions: Task, Plan, Implement, Test, Review, and PR. Specialist agent definitions live in `.github/agents/`.
 
 ## Intake
 
@@ -28,15 +28,16 @@ The GitHub MCP exposes repository and pull-request write operations for explicit
 
 ## Stages and gates
 
-| Stage | Owner | Required artifact / exit gate |
+| Action | Owner | Required artifact / exit gate |
 | --- | --- | --- |
-| Intake and plan | `issue-planner` | Retrieved issue reference, explicit acceptance criteria, assumptions, risks, scoped steps, test matrix; actionable or blocked status |
-| Implementation | `issue-implementer` | Ticket-scoped code/test changes and changed-file summary mapped to accepted criteria |
-| Unit, integration, and e2e verification | `quality-gate` | Exact command outcomes and criteria coverage; pass, fail, or blocked status |
-| CI repair | `ci-fixer`, routed by orchestrator | Evidence-based, minimal repair and successful focused rerun; at most two repair-and-full-gate cycles |
-| Preview deployment | `preview-deployer` | Passing quality gate plus approval or an already-authorized automatic PR-preview workflow; provider-confirmed non-production URL/status |
+| 1. Task | `issue-planner` | Retrieved issue reference and task details, or supplied issue text; identify missing details and block if the task cannot be understood |
+| 2. Plan | `issue-planner` | Explicit acceptance criteria, assumptions, risks, scoped implementation steps, and test matrix; actionable or blocked status |
+| 3. Implement | `issue-implementer` | Ticket-scoped code/test changes and changed-file summary mapped to accepted criteria |
+| 4. Test | `quality-gate`; `ci-fixer` when needed | Exact command outcomes and criteria coverage; pass, fail, or blocked status. Repairs are evidence-based and limited to two repair-and-full-gate cycles |
+| 5. Review | Issue Pipeline orchestrator | Review the complete change against the accepted task and plan, inspect the diff for regressions and scope drift, and confirm test evidence. Resolve or report findings before proceeding |
+| 6. PR | Issue Pipeline orchestrator; `preview-deployer` only if applicable | With explicit user authorization, create a PR from the reviewed, tested changes and report its confirmed URL/status. A preview may be created only through an existing authorized workflow or after separate deployment approval |
 
-Do not advance through a blocked gate. After two repair cycles, stop and report the remaining failure. Never merge, release, or deploy production in this pipeline.
+Do not advance through a blocked gate. After two repair cycles, stop and report the remaining failure. Do not create a PR without explicit authorization. Never merge, release, or deploy production in this pipeline.
 
 ## Repository verification
 
@@ -49,14 +50,14 @@ Use the existing package scripts:
 
 The quality gate should choose the smallest checks that cover the acceptance criteria, while also running the repository's expected checks for the changed scope. Report checks not run and why. Do not change tests or quality gates to make a run pass.
 
-## Preview provider boundary
+## Optional Preview Provider Boundary
 
 - The current application is a Vite frontend. Its static preview can be hosted as a Netlify site or a Render Static Site, according to whichever provider workflow is configured for this repository.
 - Render is the intended host for an actual server/API service. Do not treat the development `mock-server.ts` as a production backend.
 - The MCP connections allow provider access but do not configure a site, service, CI workflow, repository linkage, or preview environment. Those must already exist. Use Git-connected provider previews where available; otherwise, use a provider MCP only to deploy an existing, confirmed non-production target.
 - Ask for approval before triggering a provider deployment unless the user has authorized that run or an existing approved PR workflow creates the preview automatically. Never create/delete services or sites, change environment variables, or target production through an MCP call in this pipeline. Store credentials only in provider settings or VS Code's secure input storage, never in source or chat.
-- If provider setup is absent, finish the code and verification stages when possible, then report preview deployment as blocked with the specific setup needed. Never fabricate a preview URL.
+- If provider setup is absent, continue through Review and PR when possible, then report preview deployment as blocked with the specific setup needed. Never fabricate a preview URL.
 
 ## Completion report
 
-Report the issue reference and whether it was actually retrieved; summarize plan and implementation; list exact validation commands and outcomes; identify CI repairs; and give the confirmed preview URL/provider or clearly state why deployment was not performed. Distinguish passed, failed, skipped, and blocked work.
+Report each action's outcome: issue reference and whether it was retrieved, plan, implementation, exact validation commands and results, review findings and disposition, and confirmed PR URL/status if created. Include CI repairs and any confirmed preview URL/provider or explain why preview deployment was not performed. Distinguish passed, failed, skipped, and blocked work.

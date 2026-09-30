@@ -52,4 +52,4 @@ Keep changes aligned with the repository's existing architecture and conventions
 
 ## Issue-driven delivery
 
-For work requested from a Jira or GitHub issue, use the `Issue Pipeline` custom agent in `.github/agents/issue-pipeline.agent.md`. It coordinates the issue planner, implementation, quality gate, preview deployment, and CI repair agents. Follow `.github/issue-pipeline.md` for integration prerequisites, approval gates, and the required handoff artifacts. Do not claim an issue was read or a preview was deployed unless the connected integration or deployment provider confirms it.
+For work requested from a Jira or GitHub issue, use the `Issue Pipeline` custom agent in `.github/agents/issue-pipeline.agent.md`. It follows Task, Plan, Implement, Test, Review, and PR, coordinating the issue planner, implementer, quality gate, and CI repair agents. Preview deployment is optional and subject to the approval gates in `.github/issue-pipeline.md`. Do not claim an issue was read, a PR was created, or a preview was deployed unless the connected integration or deployment provider confirms it.
